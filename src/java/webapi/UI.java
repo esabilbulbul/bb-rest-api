@@ -7,6 +7,8 @@ package webapi;
 
 import bb.app.dekonts.DekontFields;
 import bb.app.dekonts.DekontMethods;
+import bb.app.dekonts.DekontSummary;
+import bb.app.dekonts.MonthSummary;
 import entity.mrc.SsMrcPosReports;
 import java.util.ArrayList;
 import jaxesa.annotations.Consumes;
@@ -54,11 +56,12 @@ public class UI
         
         EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
         
-        String sInFilePath  = "/Users/esabil/Documents/files/KUVEYT_Musterino_6667543_Ekno_3900_201991015217_ekstre.pdf";
-        String sOutFilePath = "/Users/esabil/Documents/files/web_dekont_summary.txt";//output file
-        
+        //String sInFilePath  = "/Users/esabil/Documents/files/KUVEYT_Musterino_6667543_Ekno_3900_201991015217_ekstre.pdf";
+        //String sOutFilePath = "/Users/esabil/Documents/files/web_dekont_summary.txt";//output file
+        String sInFilePath  = "C:\\NEOTEMP\\CODE\\SHIPSHUK\\files\\Musterino_6667543_Ekno_101_201993154652_ekstre.pdf";
+        String sOutFilePath = "C:/NEOTEMP/CODE/SHIPSHUK/files/web_dekont_summary.txt";
         ArrayList<DekontFields> Records = DekontMethods.processFile(sInFilePath, sOutFilePath, true);
-        
+
         SsMrcPosReports newReport = new SsMrcPosReports();
         for(DekontFields recordN: Records)
         {
@@ -75,15 +78,26 @@ public class UI
             newReport.txnTime    = recordN.Time;
             newReport.txnTraceNo = recordN.TraceNo;
             newReport.txnType    = recordN.TxnType;
-            
+
             long lUID = em.persist(newReport);
         }
-        
+
         //newReport.txnAmount = "1.10";
-        
+        DekontSummary summary         = new DekontSummary();
+        MonthSummary NewMonthSummary  = new MonthSummary();
+        MonthSummary TotMonthSummary  = new MonthSummary();
+        NewMonthSummary.MonthNo        = 1;//jan
+        NewMonthSummary.TotAll         = "120";
+        NewMonthSummary.TotInstallment = "50";
+        NewMonthSummary.TotUpfront     = "70";
+        summary.LastReportName = "Dosya1";
+        summary.MonthsLastReport.add(NewMonthSummary);
+        summary.MonthsAllReports.add(TotMonthSummary);
         //long lUID = em.persist(newReport);
         //Rsp.Content = 
+        Rsp.Content  = Util.JSON.Convert2JSON(summary).toString();
         Rsp.Response = "ok";
+
         return Rsp;
     }
     
