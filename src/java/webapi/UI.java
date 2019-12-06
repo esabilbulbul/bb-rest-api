@@ -299,7 +299,6 @@ public class UI
                                         @PathParam("filename")                     String psFileName
                                      ) throws Exception
     {
-
         int iRec = 0;
         try
         {
@@ -372,7 +371,6 @@ public class UI
             //long lUID = em.persist(newReport);
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
             Rsp.Response = "ok";
-            
             return Rsp;
         }
         catch(Exception e)
@@ -380,7 +378,6 @@ public class UI
             System.out.println(e.getMessage());
             throw e;
         }
-
     }
 
 }
