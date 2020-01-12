@@ -5,6 +5,7 @@
  */
 package misc;
 
+import entity.mrc.SsMrcPreferences;
 import java.util.List;
 import jaxesa.persistence.EntityManager;
 import jaxesa.persistence.Query;
@@ -18,6 +19,24 @@ import jaxesa.util.Util;
  */
 public final class DekontMisc
 {
+    public static SsMrcPreferences getMerchantPreferences(EntityManager pem, long pMrcId) throws Exception
+    {
+        SsMrcPreferences mrcPref = new SsMrcPreferences();
+
+        try
+        {
+            mrcPref = pem.find(SsMrcPreferences.class, pMrcId);
+            
+            return mrcPref;
+            
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        
+    }
+
     public static String generateReportId()
     {
         long lDateTime = Util.DateTime.GetDateTime("YYYYMMddHHmmssS");

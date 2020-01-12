@@ -11,9 +11,17 @@ import static bb.app.dekonts.DekontMisc.calculateSummaryBankSubtotals;
 import static bb.app.dekonts.DekontMisc.calculateSummaryDays;
 import static bb.app.dekonts.DekontMisc.calculateSummaryWeeksOfMonth;
 import bb.app.dekonts.DekontSummary;
+import bb.app.pages.ParamsMisc;
+import bb.app.pages.ssoCityCode;
+import bb.app.pages.ssoCountryCodes;
+import bb.app.pages.ssoPageParams;
 import entity.mrc.SsMrcDataEod;
 import entity.mrc.SsMrcDataEod;
 import entity.mrc.SsMrcDataPosTxn;
+import entity.mrc.SsMrcPreferences;
+import entity.prm.SsPrmCities;
+import entity.prm.SsPrmCityCodes;
+import entity.prm.SsPrmCountryCodes;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -37,7 +45,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 @Path("/bulbuller/dekont")
 public class UI 
 {
-    
+
     @GET
     @Path("/api/getmonthstats/{userid},"
                                 + "{lang},"
@@ -45,7 +53,8 @@ public class UI
                                 + "{sessionid}"
                                 + "{mrcid},"
                                 + "{year},"
-                                + "{month}"
+                                + "{month},"
+                                + "{currency}"
          )
     @Consumes()
     @Produces(MediaType.JSON)
@@ -55,7 +64,8 @@ public class UI
                                             @PathParam("sessionid")                    String psSessionId,
                                             @PathParam("mrcid")                        String psMrcId,
                                             @PathParam("year")                         String psYear,
-                                            @PathParam("month")                        String psMonth
+                                            @PathParam("month")                        String psMonth,
+                                            @PathParam("currency")                     String psCurrency
                                          ) throws Exception
     {
         int iRec = 0;
@@ -68,33 +78,16 @@ public class UI
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
             
-            //Decide the year
-            // If the month is larger than this year's month then the year goes back as reference 
-            /*
-            int iTargetMonth = Integer.parseInt(sTargetMonth);
-            String sTargetYear = "";
-            String sCurrentYear  = Util.DateTime.GetDateTime_s().substring(0,4);
-            int iCurrentYear = Integer.parseInt(sCurrentYear);
-            String sCurrentMonth = Util.DateTime.GetDateTime_s().substring(4,6);
-            int iCurrentMonth = Integer.parseInt(sCurrentMonth);
-            
-            if(iTargetMonth>iCurrentMonth)
-            {
-                sTargetYear  = Integer.toString(iCurrentYear - 1);
-            }
-            else
-            {
-                sTargetYear = sCurrentYear;
-            }
-            */
+            String baseCurrency   = "TL";//For now
+            String targetCurrency = "USD";
 
             String sCurrentYear  = Util.DateTime.GetDateTime_s().substring(0,4);
             sTargetMonth = Util.Str.leftPad(sTargetMonth, "0", 2);
-            summary.currentMonth.days  = calculateSummaryDays(em, "-1", sTargetMonth);
+            summary.currentMonth.days  = calculateSummaryDays(em, baseCurrency, targetCurrency, "-1", sTargetMonth);
 
-            summary.currentMonth.weeks = calculateSummaryWeeksOfMonth(em, "-1", sTargetMonth);
+            summary.currentMonth.weeks = calculateSummaryWeeksOfMonth(em, baseCurrency, targetCurrency, "-1", sTargetMonth);
             
-            summary.currentMonth.dayAvgs = bb.app.dekonts.DekontMisc.calculateSummaryTargetMonthDayAverages(em, sCurrentYear, sTargetMonth);
+            summary.currentMonth.dayAvgs = bb.app.dekonts.DekontMisc.calculateSummaryTargetMonthDayAverages(em, baseCurrency, targetCurrency, sCurrentYear, sTargetMonth);
 
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
             Rsp.Response = "ok";
@@ -214,16 +207,143 @@ public class UI
 
             DekontSummary summary = new DekontSummary();
 
+            String baseCurrency   = "TL";//For now
+            String targetCurrency = "TL";
+
             //int iBankCode = Integer.parseInt(psBankCode);
             //int iYear     = Integer.parseInt(psYear);
             //int iMonth    = Integer.parseInt(psMonthNo);
             //summary = bb.app.dekonts.DekontMisc.calculateSummary(em,iBankCode, iYear, iMonth);
-            summary.banks = bb.app.dekonts.DekontMisc.calculateSummaryBankSubtotals(em, psYear, -1);
+            summary.banks = bb.app.dekonts.DekontMisc.calculateSummaryBankSubtotals(em, baseCurrency, targetCurrency, psYear, -1);
 
             //long lUID = em.persist(newReport);
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
             Rsp.Response = "ok";
             return Rsp;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
+
+    @GET
+    @Path("/api/gprms/{userid},"
+                            + "{lang},"
+                            + "{country},"//browser
+                            + "{sessionid}"
+                            + "{pgid}"
+         )
+    @Consumes()
+    @Produces(MediaType.JSON)
+    public sso_APIResponse getParams(@PathParam("userid")                        String psUser_SessionInfo,
+                                     @PathParam("lang")                         String psLang,
+                                     @PathParam("country")                      String psCountry,
+                                     @PathParam("sessionid")                    String psSessionId,
+                                     @PathParam("pgid")                         String psPageId
+                                   ) throws Exception
+    {
+        int iRec = 0;
+        try
+        {
+            sso_APIResponse Rsp = new sso_APIResponse();
+
+            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+
+            ssoPageParams pageParams = new ssoPageParams();
+
+            // Country Codes
+            //------------------------------------------------------------------
+            ArrayList<SsPrmCountryCodes> countryCodes = new ArrayList<SsPrmCountryCodes>();
+
+            countryCodes = ParamsMisc.getCountryCodes(em);
+
+            for (SsPrmCountryCodes CCN:countryCodes)
+            {
+                ssoCountryCodes newCode = new ssoCountryCodes();
+                newCode.code = CCN.countryCode;
+                newCode.lang = "en";
+                newCode.name = CCN.countryName;
+                
+                pageParams.CountryCodes.add(newCode);
+            }
+
+            // City Codes
+            //------------------------------------------------------------------
+            ArrayList<SsPrmCities> cityCodes = new ArrayList<SsPrmCities>();
+
+            cityCodes = ParamsMisc.getCityCodes(em, psCountry);
+            for (SsPrmCities CN:cityCodes)
+            {
+                ssoCityCode newCode = new ssoCityCode();
+                newCode.code = "";
+                newCode.lang = "en";
+                newCode.name = CN.city;
+                
+                pageParams.Cities.add(newCode);
+            }
+
+
+            Rsp.Content = Util.JSON.Convert2JSON(pageParams).toString();
+            Rsp.Response = "ok";
+            return Rsp;
+
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
+    
+    @GET
+    @Path("/api/upstg/{userid},"
+                            + "{lang},"
+                            + "{country},"//browser
+                            + "{sessionid}"
+                            + "{mrcid},"
+                            + "{mi_currency},"
+                            + "{mi_mcc}," 
+                            + "{mi_country}," 
+                            + "{mi_city}," 
+                            + "{mi_town}"
+         )
+    @Consumes()
+    @Produces(MediaType.JSON)
+    public sso_APIResponse updateSettings(@PathParam("userid")                        String psUser_SessionInfo,
+                                            @PathParam("lang")                         String psLang,
+                                            @PathParam("country")                      String psCountry,
+                                            @PathParam("sessionid")                    String psSessionId,
+                                            @PathParam("mrcid")                        String psMrcId,
+                                            @PathParam("mi_currency")                  String psCurrency,
+                                            @PathParam("mi_mcc")                       String psMCC,
+                                            @PathParam("mi_country")                   String psMiCountry,
+                                            @PathParam("mi_city")                      String psCity,
+                                            @PathParam("mi_town")                      String psTown
+                                          ) throws Exception
+    {
+        int iRec = 0;
+        try
+        {
+            sso_APIResponse Rsp = new sso_APIResponse();
+
+            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+
+            DekontSummary summary = new DekontSummary();
+
+            long lMrcId = 1;
+            SsMrcPreferences mrcPrefs = new SsMrcPreferences();
+            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
+
+            //mrcPrefs.cityId = psCity;
+            //mrcPrefs.townId = psTown;
+            mrcPrefs.countryCode = "US";
+            mrcPrefs.currency = psCurrency;//biz base currency
+            mrcPrefs.mcc =  psMCC;
+
+            Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
+            Rsp.Response = "ok";
+            return Rsp;
+
         }
         catch(Exception e)
         {
@@ -262,7 +382,10 @@ public class UI
             int iBankCode = Integer.parseInt(psBankCode);
             //int iYear     = Integer.parseInt(psYear);
             //int iMonth    = Integer.parseInt(psMonthNo);
-            summary = bb.app.dekonts.DekontMisc.calculateSummary(em,iBankCode, -1, -1);
+            String baseCurrency   = "TL";//For now
+            String targetCurrency = "TL";
+
+            summary = bb.app.dekonts.DekontMisc.calculateSummary(em,baseCurrency, targetCurrency, iBankCode, -1, -1);
 
             //long lUID = em.persist(newReport);
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
@@ -276,27 +399,76 @@ public class UI
         }
     }
     
+    @GET
+    @Path("/api/getmystats/{userid},"
+                        + "{lang},"
+                        + "{country},"
+                        + "{sessionid},"
+                        + "{mrcid},"
+                        + "{currency}"
+         )
+    @Consumes()
+    @Produces(MediaType.JSON)
+    public sso_APIResponse getMyStats(  @PathParam("userid")                       String psUser_SessionInfo,
+                                        @PathParam("lang")                         String psLang,
+                                        @PathParam("country")                      String psCountry,
+                                        @PathParam("sessionid")                    String psSessionId,
+                                        @PathParam("mrcid")                        String psMrcId,
+                                        @PathParam("currency")                     String psCurrency
+                                     ) throws Exception
+    {
+        int iRec = 0;
+        try
+        {
+            sso_APIResponse Rsp = new sso_APIResponse();
+
+            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+
+            long lMrcId = 1;
+            SsMrcPreferences mrcPrefs = new SsMrcPreferences();
+            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
+            
+            String baseCurrency   = mrcPrefs.currency;
+            String targetCurrency = psCurrency;
+
+            DekontSummary summary = new DekontSummary();
+
+            summary = bb.app.dekonts.DekontMisc.calculateSummary(em, baseCurrency, targetCurrency, -1, -1, -1);//-1 all in
+
+            //long lUID = em.persist(newReport);
+            Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
+            Rsp.Response = "ok";
+            return Rsp;
+
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+    }
     
     //Sample: http://localhost:8080/bb-wapi-dekont-converter/rest/bulbuller/dekont/api/showreport/?userid=1&lang=en&country=tr&sessionid=123&mrcid=1&repid=2&filename=abc.pdf
-    
     @GET
     @Path("/api/processfile/{userid},"
                             + "{lang},"
                             + "{country},"
-                            + "{sessionid}"
-                            + "{mrcid}"
-                            + "{repid}"
-                            + "{filename}"
+                            + "{sessionid},"
+                            + "{mrcid},"
+                            + "{repid},"
+                            + "{filename},"
+                            + "{currency}"
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse processfile(  @PathParam("userid")                       String psUser_SessionInfo,
+    public sso_APIResponse processfile( @PathParam("userid")                       String psUser_SessionInfo,
                                         @PathParam("lang")                         String psLang,
                                         @PathParam("country")                      String psCountry,
                                         @PathParam("sessionid")                    String psSessionId,
                                         @PathParam("mrcid")                        String psMrcId,
                                         @PathParam("repid")                        String psReportId,
-                                        @PathParam("filename")                     String psFileName
+                                        @PathParam("filename")                     String psFileName,
+                                        @PathParam("currency")                     String psCurrency
                                      ) throws Exception
     {
         int iRec = 0;
@@ -314,14 +486,13 @@ public class UI
             //String sInFilePath  = "/Users/esabil/Documents/files/KUVEYT_Musterino_6667543_Ekno_1_2019910152032_ekstre.pdf";
             String sOutFilePath = "/Users/esabil/Documents/files/web_dekont_summary.txt";//output file
 
-
-        // pass the path to the file as a parameter 
-            //FileReader fr = new FileReader(sInFilePath); 
-
-            //int i; 
-            //while ((i=fr.read()) != -1) 
-              //System.out.print((char) i); 
-
+            long lMrcId = 1;
+            SsMrcPreferences mrcPrefs = new SsMrcPreferences();
+            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
+            
+            String baseCurrency   = mrcPrefs.currency;
+            String targetCurrency = "USD";
+            
             //File x = new File(sInFilePath);
             PDDocument document = null;
             document = PDDocument.load(new File(sInFilePath));
@@ -366,7 +537,7 @@ public class UI
             //newReport.txnAmount = "1.10";
             DekontSummary summary = new DekontSummary();
 
-            summary = bb.app.dekonts.DekontMisc.calculateSummary(em, -1, -1, -1);//-1 all in
+            summary = bb.app.dekonts.DekontMisc.calculateSummary(em, baseCurrency, targetCurrency, -1, -1, -1);//-1 all in
 
             //long lUID = em.persist(newReport);
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
