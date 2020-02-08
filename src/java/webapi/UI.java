@@ -13,15 +13,19 @@ import static bb.app.dekonts.DekontMisc.calculateSummaryWeeksOfMonth;
 import bb.app.dekonts.DekontSummary;
 import bb.app.pages.ParamsMisc;
 import bb.app.pages.ssoCityCode;
+import bb.app.pages.ssoPostCode;
 import bb.app.pages.ssoCountryCodes;
+import bb.app.pages.ssoCountyCode;
+import bb.app.pages.ssoMCC;
+import bb.app.pages.ssoMerchant;
+import bb.app.pages.ssoMerchantPreferences;
 import bb.app.pages.ssoPageParams;
 import entity.mrc.SsMrcDataEod;
-import entity.mrc.SsMrcDataEod;
 import entity.mrc.SsMrcDataPosTxn;
-import entity.mrc.SsMrcPreferences;
-import entity.prm.SsPrmCities;
-import entity.prm.SsPrmCityCodes;
+import entity.mrc.SsMrcMerchants;
+import entity.prm.SsPrmCountryStates;
 import entity.prm.SsPrmCountryCodes;
+import entity.prm.SsPrmCountryPostcodes;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -46,6 +50,49 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 public class UI 
 {
 
+    @GET
+    @Path("/api/getpageparams_mystats/{userid},"
+                                    + "{lang},"
+                                    + "{country},"
+                                    + "{sessionid}"
+         )
+    @Consumes()
+    @Produces(MediaType.JSON)
+    public sso_APIResponse getMerchantListOfUsers(  @PathParam("userid")                       String psUser_SessionInfo,
+                                                    @PathParam("lang")                         String psLang,
+                                                    @PathParam("country")                      String psCountry,
+                                                    @PathParam("sessionid")                    String psSessionId
+                                                 ) throws Exception
+    {
+        int iRec = 0;
+        try
+        {
+            sso_APIResponse Rsp = new sso_APIResponse();
+
+            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // 
+            // Page Params for "mystats"
+            // 1. List of Merchants linked to the user
+            // 2. Market Data 
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            ArrayList<ssoMerchant> mrcList = new ArrayList<ssoMerchant>();
+            
+            mrcList = DekontMisc.getListOfMerchants4User(em, 0);
+
+            Rsp.Content = Util.JSON.Convert2JSON(mrcList).toString();
+            Rsp.Response = "ok";
+
+            return Rsp;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
+
+    
     @GET
     @Path("/api/getmonthstats/{userid},"
                                 + "{lang},"
@@ -78,8 +125,13 @@ public class UI
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
             
-            String baseCurrency   = "TL";//For now
-            String targetCurrency = "USD";
+            long lMrcId = Long.parseLong(psMrcId);
+            SsMrcMerchants mrcPrefs = new SsMrcMerchants();
+            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
+            
+            String baseCurrency   = mrcPrefs.currency;
+            String targetCurrency = psCurrency;
+
 
             String sCurrentYear  = Util.DateTime.GetDateTime_s().substring(0,4);
             sTargetMonth = Util.Str.leftPad(sTargetMonth, "0", 2);
@@ -87,7 +139,7 @@ public class UI
 
             summary.currentMonth.weeks = calculateSummaryWeeksOfMonth(em, baseCurrency, targetCurrency, "-1", sTargetMonth);
             
-            summary.currentMonth.dayAvgs = bb.app.dekonts.DekontMisc.calculateSummaryTargetMonthDayAverages(em, baseCurrency, targetCurrency, sCurrentYear, sTargetMonth);
+            summary.currentMonth.dayAvgs = bb.app.dekonts.DekontMisc.calculateSummaryTargetMonthDayAverages(em, baseCurrency, targetCurrency, "-1", sTargetMonth);
 
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
             Rsp.Response = "ok";
@@ -228,6 +280,232 @@ public class UI
     }
 
     @GET
+    @Path("/api/getmrcprefs/{userid},"
+                            + "{lang},"
+                            + "{country},"//browser
+                            + "{sessionid}"
+                            + "{pgid},"
+                            + "{mid}"
+         )
+    @Consumes()
+    @Produces(MediaType.JSON)
+    public sso_APIResponse getMerchantPreferences(  @PathParam("userid")                       String psUser_SessionInfo,
+                                                    @PathParam("lang")                         String psLang,
+                                                    @PathParam("country")                      String psCountry,
+                                                    @PathParam("sessionid")                    String psSessionId,
+                                                    @PathParam("pgid")                         String psPageId,
+                                                    @PathParam("mid")                          String psMerchantId
+                                                  ) throws Exception
+    {
+        int iRec = 0;
+        try
+        {
+            sso_APIResponse Rsp = new sso_APIResponse();
+
+            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            
+            long lMrcId = Long.parseLong(psMerchantId);
+            ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
+            
+            mrcPrefs = DekontMisc.getShortMerchantPreferences(em, lMrcId);
+            
+            Rsp.Content  = Util.JSON.Convert2JSON(mrcPrefs).toString();
+            Rsp.Response = "ok";
+            return Rsp;
+
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
+    
+    @GET
+    @Path("/api/uprefs/{userid},"
+                            + "{lang},"
+                            + "{country},"//browser
+                            + "{sessionid}"
+                            + "{pgid},"
+                            + "{cur},"
+                            + "{mcc},"
+                            + "{cc},"
+                            + "{sc},"
+                            + "{coc},"
+                            + "{ae}"
+         )
+    @Consumes()
+    @Produces(MediaType.JSON)
+    public sso_APIResponse updatePreferences(   @PathParam("userid")                       String psUser_SessionInfo,
+                                                @PathParam("lang")                         String psLang,
+                                                @PathParam("country")                      String psCountry,
+                                                @PathParam("sessionid")                    String psSessionId,
+                                                @PathParam("pgid")                         String psPageId,
+                                                @PathParam("mid")                          String psMerchantId,
+                                                @PathParam("cur")                          String psCurrency,
+                                                @PathParam("mcc")                          String psMCC,
+                                                @PathParam("cc")                           String psCountryCode,
+                                                @PathParam("sc")                           String psStateCode,
+                                                @PathParam("coc")                          String psCountyCode,
+                                                @PathParam("ae")                           String psAvgMonthExpense
+                                              ) throws Exception
+    {
+        int iRec = 0;
+        try
+        {
+            sso_APIResponse Rsp = new sso_APIResponse();
+
+            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+
+            long lMrcId = Long.parseLong(psMerchantId);
+            SsMrcMerchants mrcPrefs = new SsMrcMerchants();
+            
+            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
+            
+            if (mrcPrefs!=null)
+            {
+                mrcPrefs.currency    = psCurrency;
+                mrcPrefs.mcc         = psMCC;
+                mrcPrefs.countryCode = psCountryCode;
+                mrcPrefs.stateCode   = psStateCode;
+                mrcPrefs.countyCode  = psCountyCode;// NOT Count(r)y
+                mrcPrefs.expensesProfileId = 0;
+
+                em.merge(mrcPrefs, "SsMrcPreferences.updateAll");
+            }
+            
+            Rsp.Content  = "";//Util.JSON.Convert2JSON('').toString();
+            Rsp.Response = "ok";
+            return Rsp;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
+
+    @GET
+    @Path("/api/gcnts/{userid},"
+                            + "{lang},"
+                            + "{country},"//browser
+                            + "{sessionid},"
+                            + "{pgid},"
+                            + "{countrycode},"//selected
+                            + "{citycode}"//selected
+         )
+    @Consumes()
+    @Produces(MediaType.JSON)
+    public sso_APIResponse getCountyCodes(  @PathParam("userid")                       String psUser_SessionInfo,
+                                            @PathParam("lang")                         String psLang,
+                                            @PathParam("country")                      String psCountry,
+                                            @PathParam("sessionid")                    String psSessionId,
+                                            @PathParam("pgid")                         String psPageId,
+                                            @PathParam("countrycode")                  String psCountryCode,//selected
+                                            @PathParam("citycode")                     String psCityCode//selected
+                                          ) throws Exception
+    {
+        try
+        {
+            sso_APIResponse Rsp = new sso_APIResponse();
+
+            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            String sCountryCode = psCountryCode;
+            String sCityCode = "";
+
+            if (sCountryCode.trim().length()==0)
+                sCountryCode = "tr";//default tr
+
+            sCityCode = psCityCode;
+
+            ArrayList<ssoCountyCode> countyCodes = new ArrayList<ssoCountyCode>();
+            //ArrayList<ssoPostCode> UICodes = new ArrayList<ssoPostCode>();//to the client
+
+            countyCodes = ParamsMisc.getCountyCodes(em, sCountryCode, sCityCode);
+
+            /*
+            for (SsPrmCountryPostcodes SuburbN:postCodes)
+            {
+                ssoPostCode newCode = new ssoPostCode();
+                newCode.code = SuburbN.postCode;
+                newCode.lang = "en";
+                newCode.name = SuburbN.placeName;
+                
+                UICodes.add(newCode);
+            }
+            */
+            
+            Rsp.Content = Util.JSON.Convert2JSON(countyCodes).toString();
+            Rsp.Response = "ok";
+            return Rsp;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
+    
+    
+    @GET
+    @Path("/api/gpstcds/{userid},"
+                            + "{lang},"
+                            + "{country},"//browser
+                            + "{sessionid},"
+                            + "{pgid},"
+                            + "{countrycode},"//selected
+                            + "{citycode}"//selected
+         )
+    @Consumes()
+    @Produces(MediaType.JSON)
+    public sso_APIResponse getPostCodes(    @PathParam("userid")                       String psUser_SessionInfo,
+                                            @PathParam("lang")                         String psLang,
+                                            @PathParam("country")                      String psCountry,
+                                            @PathParam("sessionid")                    String psSessionId,
+                                            @PathParam("pgid")                         String psPageId,
+                                            @PathParam("countrycode")                  String psCountryCode,//selected
+                                            @PathParam("citycode")                     String psCityCode//selected
+                                          ) throws Exception
+    {
+        try
+        {
+            sso_APIResponse Rsp = new sso_APIResponse();
+
+            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            String sCountryCode = psCountryCode;
+            String sCityCode = "";
+
+            if (sCountryCode.trim().length()==0)
+                sCountryCode = "tr";//default tr
+
+            sCityCode = psCityCode;
+
+            ArrayList<SsPrmCountryPostcodes> postCodes = new ArrayList<SsPrmCountryPostcodes>();
+            ArrayList<ssoPostCode> UICodes = new ArrayList<ssoPostCode>();//to the client
+
+            postCodes = ParamsMisc.getPostCodes(em, sCountryCode, sCityCode);
+
+            for (SsPrmCountryPostcodes SuburbN:postCodes)
+            {
+                ssoPostCode newCode = new ssoPostCode();
+                newCode.code = SuburbN.postCode;
+                newCode.lang = "en";
+                newCode.name = SuburbN.placeName;
+                
+                UICodes.add(newCode);
+            }
+            
+            Rsp.Content = Util.JSON.Convert2JSON(UICodes).toString();
+            Rsp.Response = "ok";
+            return Rsp;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
+    
+    /*
+        THIS FUNCTION SENDS THE PARAMETERS TO THE PAGE AUTO SELECTION OF COUNTRY
+    */
+    @GET
     @Path("/api/gprms/{userid},"
                             + "{lang},"
                             + "{country},"//browser
@@ -250,7 +528,11 @@ public class UI
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
 
+            if (psCountry.trim().length()==0)
+                psCountry = "tr";//default tr
+            
             ssoPageParams pageParams = new ssoPageParams();
+            pageParams.CountryCodeDefault = psCountry;
 
             // Country Codes
             //------------------------------------------------------------------
@@ -268,79 +550,41 @@ public class UI
                 pageParams.CountryCodes.add(newCode);
             }
 
-            // City Codes
+            // City Codes (if TR then city codes, else then State codes)
+            // For instance; US -> IL, NY, ...
+            // Example 2: TR -> Istanbul, Izmir ...
             //------------------------------------------------------------------
-            ArrayList<SsPrmCities> cityCodes = new ArrayList<SsPrmCities>();
+            ArrayList<ssoCityCode> cityCodes = new ArrayList<ssoCityCode>();
 
+            //returns city if TR otherwise States 
             cityCodes = ParamsMisc.getCityCodes(em, psCountry);
-            for (SsPrmCities CN:cityCodes)
+            for (ssoCityCode CN:cityCodes)
             {
                 ssoCityCode newCode = new ssoCityCode();
-                newCode.code = "";
+                newCode.code = CN.code;
                 newCode.lang = "en";
-                newCode.name = CN.city;
-                
+                newCode.name = CN.name;
+
                 pageParams.Cities.add(newCode);
             }
 
+            // MCC 
+            //------------------------------------------------------------------
+            
+            ArrayList<ssoMCC> MCCs = new ArrayList<ssoMCC>();
+            MCCs = ParamsMisc.getMCCs(em);
+            for (ssoMCC CN:MCCs)
+            {
+                ssoMCC newCode = new ssoMCC();
+                newCode.code = CN.code;
+                newCode.lang = "en";
+                newCode.name = CN.name;
+
+                pageParams.MCCs.add(newCode);
+            }
+            
 
             Rsp.Content = Util.JSON.Convert2JSON(pageParams).toString();
-            Rsp.Response = "ok";
-            return Rsp;
-
-        }
-        catch(Exception e)
-        {
-            throw e;
-        }
-    }
-    
-    @GET
-    @Path("/api/upstg/{userid},"
-                            + "{lang},"
-                            + "{country},"//browser
-                            + "{sessionid}"
-                            + "{mrcid},"
-                            + "{mi_currency},"
-                            + "{mi_mcc}," 
-                            + "{mi_country}," 
-                            + "{mi_city}," 
-                            + "{mi_town}"
-         )
-    @Consumes()
-    @Produces(MediaType.JSON)
-    public sso_APIResponse updateSettings(@PathParam("userid")                        String psUser_SessionInfo,
-                                            @PathParam("lang")                         String psLang,
-                                            @PathParam("country")                      String psCountry,
-                                            @PathParam("sessionid")                    String psSessionId,
-                                            @PathParam("mrcid")                        String psMrcId,
-                                            @PathParam("mi_currency")                  String psCurrency,
-                                            @PathParam("mi_mcc")                       String psMCC,
-                                            @PathParam("mi_country")                   String psMiCountry,
-                                            @PathParam("mi_city")                      String psCity,
-                                            @PathParam("mi_town")                      String psTown
-                                          ) throws Exception
-    {
-        int iRec = 0;
-        try
-        {
-            sso_APIResponse Rsp = new sso_APIResponse();
-
-            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
-
-            DekontSummary summary = new DekontSummary();
-
-            long lMrcId = 1;
-            SsMrcPreferences mrcPrefs = new SsMrcPreferences();
-            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
-
-            //mrcPrefs.cityId = psCity;
-            //mrcPrefs.townId = psTown;
-            mrcPrefs.countryCode = "US";
-            mrcPrefs.currency = psCurrency;//biz base currency
-            mrcPrefs.mcc =  psMCC;
-
-            Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
             Rsp.Response = "ok";
             return Rsp;
 
@@ -424,8 +668,8 @@ public class UI
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
 
-            long lMrcId = 1;
-            SsMrcPreferences mrcPrefs = new SsMrcPreferences();
+            long lMrcId = Long.parseLong(psMrcId);
+            SsMrcMerchants mrcPrefs = new SsMrcMerchants();
             mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
             
             String baseCurrency   = mrcPrefs.currency;
@@ -486,8 +730,8 @@ public class UI
             //String sInFilePath  = "/Users/esabil/Documents/files/KUVEYT_Musterino_6667543_Ekno_1_2019910152032_ekstre.pdf";
             String sOutFilePath = "/Users/esabil/Documents/files/web_dekont_summary.txt";//output file
 
-            long lMrcId = 1;
-            SsMrcPreferences mrcPrefs = new SsMrcPreferences();
+            long lMrcId = Long.parseLong(psMrcId);
+            SsMrcMerchants mrcPrefs = new SsMrcMerchants();
             mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
             
             String baseCurrency   = mrcPrefs.currency;
