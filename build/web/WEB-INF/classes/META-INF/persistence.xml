@@ -3,11 +3,10 @@
   <persistence-unit name="bb-wapi-dekont-converterPU" transaction-type="RESOURCE_LOCAL">
     <class>entity.mrc.SsMrcDataPosTxn</class>
     <class>entity.mrc.SsMrcDataEod</class>
-    <class>entity.mrc.SsMrcMerchants</class>
     <class>entity.prm.SsPrmCountryCodes</class>
     <class>entity.prm.SsPrmCountryStates</class>
     <class>entity.prm.SsPrmCountryPostcodes</class>
-    <class>entity.mrc.SsUsrMerchants</class>
+    <class>entity.mrc.SsMrcMerchants</class>
 
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>

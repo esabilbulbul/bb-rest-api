@@ -862,6 +862,9 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.jax-framework}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
+        <ant antfile="${project.jax-lib-session}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
         <ant antfile="${project.jax-lib-util}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -880,6 +883,9 @@ exists or setup the property manually. For example like this:
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.jax-framework}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
+        <ant antfile="${project.jax-lib-session}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.jax-lib-util}/build.xml" inheritall="false" target="jar">
@@ -1051,6 +1057,8 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.bb-lib-dekont-converter.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.SHIPSHUK_DB.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${file.reference.pdfbox-app-2.0.17.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.commons-codec-1.9.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.jax-lib-session.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
@@ -1071,6 +1079,8 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.bb-lib-dekont-converter.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.SHIPSHUK_DB.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${file.reference.pdfbox-app-2.0.17.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.commons-codec-1.9.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.jax-lib-session.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
     <target depends="init" if="dist.ear.dir" name="-clean-webinf-lib">
         <delete dir="${build.web.dir}/WEB-INF/lib"/>
@@ -1487,6 +1497,7 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.SHIPSHUK_DB}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.bb-lib-dekont-converter}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.jax-framework}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.jax-lib-session}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.jax-lib-util}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.jax-log-client}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.jax-persistence}/build.xml" inheritall="false" target="clean"/>
