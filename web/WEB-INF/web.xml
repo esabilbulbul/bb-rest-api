@@ -14,7 +14,7 @@
     
     <!-- JAXESA LISTENERS -->
     <listener> 
-        <listener-class>jaxesa.sessionmanager.sessionmanager</listener-class>        
+        <listener-class>jaxesa.session.SessionManager</listener-class>        
     </listener> 
     
     <listener>
@@ -74,8 +74,14 @@
                 <param-name>gmt</param-name>
                 <param-value>+8</param-value>            
             </init-param>
-
-            
+            <init-param>
+                <param-name>memdb_host</param-name>
+                <param-value>localhost</param-value>            
+            </init-param>
+            <init-param>
+                <param-name>memdb_port</param-name>
+                <param-value>6379</param-value>            
+            </init-param>
 
         
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->

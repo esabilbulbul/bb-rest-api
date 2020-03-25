@@ -38,7 +38,7 @@ import jaxesa.annotations.Produces;
 import jaxesa.persistence.DBPool;
 import jaxesa.persistence.EntityManager;
 import jaxesa.util.Util;
-import jaxesa.webapi.sso_APIResponse;
+import jaxesa.webapi.ssoAPIResponse;
 import misc.DekontMisc;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
@@ -58,7 +58,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse getMerchantListOfUsers(  @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse getMerchantListOfUsers(  @PathParam("userid")                       String psUser_SessionInfo,
                                                     @PathParam("lang")                         String psLang,
                                                     @PathParam("country")                      String psCountry,
                                                     @PathParam("sessionid")                    String psSessionId
@@ -67,7 +67,7 @@ public class UI
         int iRec = 0;
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
 
@@ -105,7 +105,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse getMonthStats(  @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse getMonthStats(  @PathParam("userid")                       String psUser_SessionInfo,
                                             @PathParam("lang")                         String psLang,
                                             @PathParam("country")                      String psCountry,
                                             @PathParam("sessionid")                    String psSessionId,
@@ -118,7 +118,7 @@ public class UI
         int iRec = 0;
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
             String sTargetMonth = psMonth;
             
             DekontSummary summary = new DekontSummary();
@@ -164,7 +164,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse addNewEndOfDay(  @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse addNewEndOfDay(  @PathParam("userid")                       String psUser_SessionInfo,
                                             @PathParam("lang")                         String psLang,
                                             @PathParam("country")                      String psCountry,
                                             @PathParam("sessionid")                    String psSessionId,
@@ -185,7 +185,7 @@ public class UI
             // used in graph chart
             //
             //--------------------------------------------------
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
 
@@ -234,7 +234,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse getReportByCell( @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse getReportByCell( @PathParam("userid")                       String psUser_SessionInfo,
                                             @PathParam("lang")                         String psLang,
                                             @PathParam("country")                      String psCountry,
                                             @PathParam("sessionid")                    String psSessionId,
@@ -253,7 +253,7 @@ public class UI
             // used in graph chart
             //
             //--------------------------------------------------
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
 
@@ -289,7 +289,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse getMerchantPreferences(  @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse getMerchantPreferences(  @PathParam("userid")                       String psUser_SessionInfo,
                                                     @PathParam("lang")                         String psLang,
                                                     @PathParam("country")                      String psCountry,
                                                     @PathParam("sessionid")                    String psSessionId,
@@ -300,7 +300,7 @@ public class UI
         int iRec = 0;
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
             
@@ -335,7 +335,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse updatePreferences(   @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse updatePreferences(   @PathParam("userid")                       String psUser_SessionInfo,
                                                 @PathParam("lang")                         String psLang,
                                                 @PathParam("country")                      String psCountry,
                                                 @PathParam("sessionid")                    String psSessionId,
@@ -352,7 +352,7 @@ public class UI
         int iRec = 0;
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
 
@@ -394,7 +394,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse getCountyCodes(  @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse getCountyCodes(  @PathParam("userid")                       String psUser_SessionInfo,
                                             @PathParam("lang")                         String psLang,
                                             @PathParam("country")                      String psCountry,
                                             @PathParam("sessionid")                    String psSessionId,
@@ -405,7 +405,7 @@ public class UI
     {
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
             String sCountryCode = psCountryCode;
@@ -455,7 +455,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse getPostCodes(    @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse getPostCodes(    @PathParam("userid")                       String psUser_SessionInfo,
                                             @PathParam("lang")                         String psLang,
                                             @PathParam("country")                      String psCountry,
                                             @PathParam("sessionid")                    String psSessionId,
@@ -466,7 +466,7 @@ public class UI
     {
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
             String sCountryCode = psCountryCode;
@@ -514,7 +514,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse getParams(@PathParam("userid")                        String psUser_SessionInfo,
+    public ssoAPIResponse getParams(@PathParam("userid")                        String psUser_SessionInfo,
                                      @PathParam("lang")                         String psLang,
                                      @PathParam("country")                      String psCountry,
                                      @PathParam("sessionid")                    String psSessionId,
@@ -524,7 +524,7 @@ public class UI
         int iRec = 0;
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
 
@@ -607,7 +607,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse getReportByBank(@PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse getReportByBank(@PathParam("userid")                       String psUser_SessionInfo,
                                             @PathParam("lang")                         String psLang,
                                             @PathParam("country")                      String psCountry,
                                             @PathParam("sessionid")                    String psSessionId,
@@ -617,7 +617,7 @@ public class UI
         int iRec = 0;
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
 
@@ -653,7 +653,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse getMyStats(  @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse getMyStats(  @PathParam("userid")                       String psUser_SessionInfo,
                                         @PathParam("lang")                         String psLang,
                                         @PathParam("country")                      String psCountry,
                                         @PathParam("sessionid")                    String psSessionId,
@@ -664,7 +664,7 @@ public class UI
         int iRec = 0;
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
 
@@ -705,7 +705,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public sso_APIResponse processfile( @PathParam("userid")                       String psUser_SessionInfo,
+    public ssoAPIResponse processfile( @PathParam("userid")                       String psUser_SessionInfo,
                                         @PathParam("lang")                         String psLang,
                                         @PathParam("country")                      String psCountry,
                                         @PathParam("sessionid")                    String psSessionId,
@@ -718,7 +718,7 @@ public class UI
         int iRec = 0;
         try
         {
-            sso_APIResponse Rsp = new sso_APIResponse();
+            ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
             
