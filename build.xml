@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="bb-wapi-dekont-converter" default="default" basedir=".">
-    <description>Builds, tests, and runs the project bb-wapi-dekont-converter.</description>
+<project name="bb-rest-api" default="default" basedir=".">
+    <description>Builds, tests, and runs the project bb-rest-api.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 

@@ -35,6 +35,8 @@ import jaxesa.annotations.MediaType;
 import jaxesa.annotations.Path;
 import jaxesa.annotations.PathParam;
 import jaxesa.annotations.Produces;
+import jaxesa.annotations.Token;
+import jaxesa.annotations.VerificationType;
 import jaxesa.persistence.DBPool;
 import jaxesa.persistence.EntityManager;
 import jaxesa.util.Util;
@@ -319,13 +321,14 @@ public class UI
             throw e;
         }
     }
-    
+
     @GET
     @Path("/api/uprefs/{userid},"
                             + "{lang},"
                             + "{country},"//browser
                             + "{sessionid}"
                             + "{pgid},"
+                            + "{mid},"
                             + "{cur},"
                             + "{mcc},"
                             + "{cc},"
@@ -335,6 +338,7 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
+    @Token(VerificationType.MUST)
     public ssoAPIResponse updatePreferences(   @PathParam("userid")                       String psUser_SessionInfo,
                                                 @PathParam("lang")                         String psLang,
                                                 @PathParam("country")                      String psCountry,

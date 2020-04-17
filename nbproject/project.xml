@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.web.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/web-project/3">
-            <name>bb-wapi-dekont-converter</name>
+            <name>bb-rest-api</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <web-module-libraries>
                 <library dirs="200">
@@ -47,16 +47,22 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.javax.servlet-api-3.0.1.jar}</file>
+                    <file>${file.reference.javax.servlet-api-3.0.1.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.javax.servlet-api-3.0.1.jar}</file>
                 </library>
                 <library dirs="200">
                     <file>${reference.jax-framework.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.java-json.jar}</file>
+                    <file>${file.reference.java-json.jar-1}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.java-json.jar}</file>
                 </library>
                 <library dirs="200">
                     <file>${reference.bb-lib-dekont-converter.jar}</file>
