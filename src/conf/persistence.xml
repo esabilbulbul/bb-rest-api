@@ -1,12 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="bb-wapi-dekont-converterPU" transaction-type="RESOURCE_LOCAL">
-    <class>entity.mrc.SsMrcDataPosTxn</class>
-    <class>entity.mrc.SsMrcDataEod</class>
+    <class>entity.user.SsUserGeoTasks</class>
+    <class>entity.activation.SsActivationTokens</class>
+    <class>entity.activation.SsActivationEmailLog</class>
+    <class>entity.seo.SsPrmCatalogSegment</class>
+    <class>entity.seo.SsPrmCatalogFamily</class>
+    <class>entity.seo.SsPrmCatalogClass</class>
+    <class>entity.seo.SsPrmCatalogBrick</class>
+    <class>entity.seo.SsPrmCatalogAttributeType</class>
+    <class>entity.seo.SsPrmCatalogAttributeValue</class>
+    <class>entity.seo.SsPrmCatalogXwords</class>
+    <class>entity.seo.SsPrmCommonWords</class>
+    <class>entity.seo.SsPrmCatalogCodesGenders</class>
+    <class>entity.seo.SsSeoCatalog</class>
+    <class>entity.seo.SsSeoCatalogCodes</class>
+    <class>entity.seo.SsPrmCatalogCategory</class>
+    <class>entity.seo.SsPrmCatalogSubcategory</class>
+    <class>entity.seo.SsSeoCatalogMatrix</class>
+    <class>entity.geo.SsGeoPoiRaw</class>
+    <class>entity.geo.SsGeoZipcodes</class>
+    <class>entity.geo.SsGeoPoiRawWay</class>
+    <class>entity.geo.SsGeoPoiLookup</class>
+    <class>entity.geo.SsGeoPoiLookupDetails</class>
+    <class>entity.ui.SsUiTbHeaders</class>
+    <class>entity.ui.SsUiTbHeaderCols</class>
+    <class>entity.ui.SsUiTbHeaderCatalogMenu</class>
+    <class>entity.ui.SsUiTbHeaderCatalogPageCols</class>    
+    <class>entity.ads.SsAdsTabmenuDefaults</class>
+    <class>entity.fee.SsFeeShippingDefaults</class>
+    <class>entity.geo.SsMapStats</class>
+    <class>entity.geo.SsMapErr</class>
+    <class>entity.security.SsSrvRsaKeys</class>
+    <class>entity.sys.SsSysNewEntry</class>
+    <class>entity.user.SsUsrAccounts</class>
+    <class>entity.user.SsUsrBrands</class>
+    <class>entity.user.SsUsrUsers</class>
+    <class>entity.posts.SsPstComments</class>
+    <class>entity.posts.SsPstActivityLog</class>
+    <class>entity.posts.SsPstPosts</class>
+    <class>entity.posts.SsPstFollows</class>
     <class>entity.prm.SsPrmCountryCodes</class>
     <class>entity.prm.SsPrmCountryStates</class>
     <class>entity.prm.SsPrmCountryPostcodes</class>
-    <class>entity.mrc.SsMrcMerchants</class>
+    <class>entity.mrc.SsMrcDataEod</class>
+    <class>entity.mrc.SsMrcStatsQuantity</class>
+    <class>entity.mrc.SsMrcStatsEarnings</class>
+    <class>entity.mrc.SsMrcStatsMarketRaw</class>
 
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>

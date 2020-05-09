@@ -9,6 +9,7 @@ import bb.app.dekonts.DekontSummaryYear;
 import bb.app.pages.ssoMerchant;
 import bb.app.pages.ssoMerchantPreferences;
 import entity.mrc.SsMrcMerchants;
+import entity.user.SsUsrAccounts;
 import java.util.ArrayList;
 import java.util.List;
 import jaxesa.persistence.EntityManager;
@@ -56,7 +57,8 @@ public final class DekontMisc
 
                     newMrc.name  = Util.Database.getValString(RowN, "MRC_NAME");
                     newMrc.id    = Util.Database.getValString(RowN, "UID");
-                    
+                    newMrc.isDefault = Util.Database.getValString(RowN, "ISDEFAULT");
+
                     mrcList.add(newMrc);
                 }
 
@@ -70,28 +72,10 @@ public final class DekontMisc
         }
     }
 
-    public static SsMrcMerchants getMerchantPreferences(EntityManager pem, long pMrcId) throws Exception
-    {
-        SsMrcMerchants mrcPrefs = new SsMrcMerchants();
-        
-        try
-        {
-            mrcPrefs = pem.find(SsMrcMerchants.class, pMrcId);
-            
-            return mrcPrefs;
-        }
-        catch(Exception e)
-        {
-            throw e;
-        }
-    }
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-    // This only returns the codes of Merchant Preferences
-    //
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    public static ssoMerchantPreferences getShortMerchantPreferences(EntityManager pem, long pMrcId) throws Exception
+    // User = User Id + Account Id
+    // User might have multiple accounts 
+    // Default account type is Individual (I) other availables are "Business"
+    public static ssoMerchantPreferences getMerchantPreferences(EntityManager pem, long pUserId, long pAccountId) throws Exception
     {
         ssoMerchantPreferences mrcPref = new ssoMerchantPreferences();
 
@@ -100,10 +84,12 @@ public final class DekontMisc
 
             StoredProcedureQuery SP = pem.createStoredProcedureQuery("SP_MRC_GET_MERCHANT_PREFERENCES");
 
-            SP.registerStoredProcedureParameter("P_MRC_ID"    , Long.class     , ParameterMode.IN);
+            SP.registerStoredProcedureParameter("P_USR_ID"    , Long.class     , ParameterMode.IN);
+            SP.registerStoredProcedureParameter("P_ACC_ID"    , Long.class     , ParameterMode.IN);
 
             int Colindex = 1;
-            SP.SetParameter(Colindex++, pMrcId             , "P_MRC_ID");
+            SP.SetParameter(Colindex++, pUserId             , "P_USR_ID");
+            SP.SetParameter(Colindex++, pAccountId          , "P_USR_ID");
 
             SP.execute();
 
@@ -116,7 +102,10 @@ public final class DekontMisc
 
                 DekontSummaryYear newYear = new DekontSummaryYear();
 
-                mrcPref.MerchantName    = Util.Database.getValString(RowN, "MRC_NAME");
+                mrcPref.Id              = Long.parseLong(Util.Database.getValString(RowN, "UID").toString());
+                mrcPref.version         = Integer.parseInt(Util.Database.getValString(RowN, "VERSION").toString());
+                mrcPref.MerchantName    = Util.Database.getValString(RowN, "PROFILENAME");
+                //mrcPref.MerchantName    = Util.Database.getValString(RowN, "PROFILE_NAME");
                 mrcPref.CurrencyCode    = Util.Database.getValString(RowN, "CURRENCY_CODE");
                 mrcPref.CurrencyName    = Util.Database.getValString(RowN, "CURRENCY_NAME");
                 mrcPref.MCC             = Util.Database.getValString(RowN, "MCC");
@@ -129,6 +118,10 @@ public final class DekontMisc
                 mrcPref.CountyName      = Util.Database.getValString(RowN, "COUNTY_NAME");
                 
             }
+            else
+            {
+                return null;
+            }
             
             
             return mrcPref;
@@ -137,7 +130,30 @@ public final class DekontMisc
         {
             throw e;
         }
+        /*
+        SsMrcMerchants mrcPrefs = new SsMrcMerchants();
         
+        try
+        {
+            mrcPrefs = pem.find(SsMrcMerchants.class, pMrcId);
+            
+            return mrcPrefs;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        */
+    }
+
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
+    // This only returns the codes of Merchant Preferences
+    //
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public static ssoMerchantPreferences getShortMerchantPreferences(EntityManager pem, long pUserId, long pAccountId) throws Exception
+    {
+        return getMerchantPreferences(pem, pUserId, pAccountId);
     }
 
     public static String generateReportId()

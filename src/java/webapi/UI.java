@@ -26,6 +26,7 @@ import entity.mrc.SsMrcMerchants;
 import entity.prm.SsPrmCountryStates;
 import entity.prm.SsPrmCountryCodes;
 import entity.prm.SsPrmCountryPostcodes;
+import entity.user.SsUsrAccounts;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -43,15 +44,34 @@ import jaxesa.util.Util;
 import jaxesa.webapi.ssoAPIResponse;
 import misc.DekontMisc;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import restapi.jeiRestInterface;
 
 /**
  *
  * @author Administrator
  */
 @Path("/bulbuller/dekont")
-public class UI 
+public class UI implements jeiRestInterface
 {
+    long gUserId  = -1;
+    EntityManager gem;
+    
+    @Override
+    public void init(String pUserId, EntityManager pem)
+    {
+        try
+        {
+            String s = "";
 
+            gUserId = Long.parseLong(pUserId);
+            gem = pem;
+        }
+        catch(Exception e)
+        {
+        
+        }
+    }
+    
     @GET
     @Path("/api/getpageparams_mystats/{userid},"
                                     + "{lang},"
@@ -71,7 +91,8 @@ public class UI
         {
             ssoAPIResponse Rsp = new ssoAPIResponse();
 
-            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            //EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            EntityManager em = gem;
 
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             // 
@@ -81,7 +102,7 @@ public class UI
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             ArrayList<ssoMerchant> mrcList = new ArrayList<ssoMerchant>();
             
-            mrcList = DekontMisc.getListOfMerchants4User(em, 0);
+            mrcList = DekontMisc.getListOfMerchants4User(em, gUserId);
 
             Rsp.Content = Util.JSON.Convert2JSON(mrcList).toString();
             Rsp.Response = "ok";
@@ -128,20 +149,20 @@ public class UI
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
             
             long lMrcId = Long.parseLong(psMrcId);
-            SsMrcMerchants mrcPrefs = new SsMrcMerchants();
-            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
+            ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
+            mrcPrefs = DekontMisc.getMerchantPreferences(em, gUserId, lMrcId);
             
-            String baseCurrency   = mrcPrefs.currency;
+            String baseCurrency   = mrcPrefs.CurrencyCode;
             String targetCurrency = psCurrency;
 
 
             String sCurrentYear  = Util.DateTime.GetDateTime_s().substring(0,4);
             sTargetMonth = Util.Str.leftPad(sTargetMonth, "0", 2);
-            summary.currentMonth.days  = calculateSummaryDays(em, baseCurrency, targetCurrency, "-1", sTargetMonth);
+            summary.currentMonth.days  = calculateSummaryDays(em, lMrcId, baseCurrency, targetCurrency, "-1", sTargetMonth);
 
-            summary.currentMonth.weeks = calculateSummaryWeeksOfMonth(em, baseCurrency, targetCurrency, "-1", sTargetMonth);
+            summary.currentMonth.weeks = calculateSummaryWeeksOfMonth(em, lMrcId, baseCurrency, targetCurrency, "-1", sTargetMonth);
             
-            summary.currentMonth.dayAvgs = bb.app.dekonts.DekontMisc.calculateSummaryTargetMonthDayAverages(em, baseCurrency, targetCurrency, "-1", sTargetMonth);
+            summary.currentMonth.dayAvgs = bb.app.dekonts.DekontMisc.calculateSummaryTargetMonthDayAverages(em, lMrcId, baseCurrency, targetCurrency, "-1", sTargetMonth);
 
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
             Rsp.Response = "ok";
@@ -196,6 +217,8 @@ public class UI
             SsMrcDataEod cashTxn = new SsMrcDataEod();
             if (rc==false)
             {
+                //Calculate Last 12 months total (from txnDate)
+
                 //New Insert
                 cashTxn.stat        = 1;
                 cashTxn.mrcId       = "1";
@@ -263,12 +286,13 @@ public class UI
 
             String baseCurrency   = "TL";//For now
             String targetCurrency = "TL";
+            long lMrcId = Long.parseLong(psMrcId);
 
             //int iBankCode = Integer.parseInt(psBankCode);
             //int iYear     = Integer.parseInt(psYear);
             //int iMonth    = Integer.parseInt(psMonthNo);
             //summary = bb.app.dekonts.DekontMisc.calculateSummary(em,iBankCode, iYear, iMonth);
-            summary.banks = bb.app.dekonts.DekontMisc.calculateSummaryBankSubtotals(em, baseCurrency, targetCurrency, psYear, -1);
+            summary.banks = bb.app.dekonts.DekontMisc.calculateSummaryBankSubtotals(em, lMrcId, baseCurrency, targetCurrency, psYear, -1);
 
             //long lUID = em.persist(newReport);
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
@@ -304,12 +328,13 @@ public class UI
         {
             ssoAPIResponse Rsp = new ssoAPIResponse();
 
-            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            //EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            EntityManager em = gem;//asigned at init
             
             long lMrcId = Long.parseLong(psMerchantId);
             ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
             
-            mrcPrefs = DekontMisc.getShortMerchantPreferences(em, lMrcId);
+            mrcPrefs = DekontMisc.getShortMerchantPreferences(em, gUserId, lMrcId);
             
             Rsp.Content  = Util.JSON.Convert2JSON(mrcPrefs).toString();
             Rsp.Response = "ok";
@@ -358,23 +383,38 @@ public class UI
         {
             ssoAPIResponse Rsp = new ssoAPIResponse();
 
-            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            //EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            EntityManager em = gem;
 
             long lMrcId = Long.parseLong(psMerchantId);
-            SsMrcMerchants mrcPrefs = new SsMrcMerchants();
-            
-            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
-            
+            ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
+
+            mrcPrefs = DekontMisc.getMerchantPreferences(em, gUserId, lMrcId);
+
             if (mrcPrefs!=null)
             {
-                mrcPrefs.currency    = psCurrency;
-                mrcPrefs.mcc         = psMCC;
-                mrcPrefs.countryCode = psCountryCode;
-                mrcPrefs.stateCode   = psStateCode;
+                //update will be implemented here
+                SsUsrAccounts account = new SsUsrAccounts();
+                account.uid = mrcPrefs.Id;
+                account.version = mrcPrefs.version;
+                account.currencyCode = psCurrency;
+                account.mcc          = psMCC;
+                account.countryCode  = psCountryCode;
+                account.stateCode    = psStateCode;
+                account.countyCode   = psCountyCode;
+
+                em.merge(account, "SsUsrAccounts.updatePrefs");
+
+                /*
+                mrcPrefs.CurrencyCode    = psCurrency;
+                mrcPrefs.MCC         = psMCC;
+                mrcPrefs.CountryCode = psCountryCode;
+                mrcPrefs.StateCode   = psStateCode;
                 mrcPrefs.countyCode  = psCountyCode;// NOT Count(r)y
                 mrcPrefs.expensesProfileId = 0;
 
                 em.merge(mrcPrefs, "SsMrcPreferences.updateAll");
+                */
             }
             
             Rsp.Content  = "";//Util.JSON.Convert2JSON('').toString();
@@ -530,7 +570,8 @@ public class UI
         {
             ssoAPIResponse Rsp = new ssoAPIResponse();
 
-            EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            //EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            EntityManager em = gem;
 
             if (psCountry.trim().length()==0)
                 psCountry = "tr";//default tr
@@ -630,10 +671,11 @@ public class UI
             int iBankCode = Integer.parseInt(psBankCode);
             //int iYear     = Integer.parseInt(psYear);
             //int iMonth    = Integer.parseInt(psMonthNo);
+            long pMrcId = Long.parseLong(psMrcId);
             String baseCurrency   = "TL";//For now
             String targetCurrency = "TL";
 
-            summary = bb.app.dekonts.DekontMisc.calculateSummary(em,baseCurrency, targetCurrency, iBankCode, -1, -1);
+            summary = bb.app.dekonts.DekontMisc.calculateSummary(em, pMrcId, "", baseCurrency, targetCurrency, iBankCode, -1, -1);
 
             //long lUID = em.persist(newReport);
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
@@ -671,17 +713,18 @@ public class UI
             ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
+            //EntityManager em = gem;
 
             long lMrcId = Long.parseLong(psMrcId);
-            SsMrcMerchants mrcPrefs = new SsMrcMerchants();
-            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
+            ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
+            mrcPrefs = DekontMisc.getMerchantPreferences(em, 38482644, 38482645);
             
-            String baseCurrency   = mrcPrefs.currency;
+            String baseCurrency   = mrcPrefs.CurrencyCode;
             String targetCurrency = psCurrency;
 
             DekontSummary summary = new DekontSummary();
 
-            summary = bb.app.dekonts.DekontMisc.calculateSummary(em, baseCurrency, targetCurrency, -1, -1, -1);//-1 all in
+            summary = bb.app.dekonts.DekontMisc.calculateSummary(em, lMrcId, mrcPrefs.MerchantName, baseCurrency, targetCurrency, -1, -1, -1);//-1 all in
 
             //long lUID = em.persist(newReport);
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
@@ -709,7 +752,11 @@ public class UI
          )
     @Consumes()
     @Produces(MediaType.JSON)
-    public ssoAPIResponse processfile( @PathParam("userid")                       String psUser_SessionInfo,
+    //This method will no long be USED
+    //This used process the file thru an API and send the summary back to the UI.
+    //However, the process split into 2. 1st sys process the file
+    //2nd UI request for the summary
+    public ssoAPIResponse processfile(  @PathParam("userid")                       String psUser_SessionInfo,
                                         @PathParam("lang")                         String psLang,
                                         @PathParam("country")                      String psCountry,
                                         @PathParam("sessionid")                    String psSessionId,
@@ -725,22 +772,22 @@ public class UI
             ssoAPIResponse Rsp = new ssoAPIResponse();
 
             EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
-            
+
             String sUserId = "123466";//for now
             String sFilePath = DekontMisc.getFilePathbyId(psFileName, "/Users/esabil/Documents/uploads", sUserId);
-            
+
             //String sInFilePath  = "/Users/esabil/Documents/files/KUVEYT_Musterino_6667543_Ekno_1_2019910152032_ekstre.pdf";
             String sInFilePath  = sFilePath;
             //String sInFilePath  = "/Users/esabil/Documents/files/KUVEYT_Musterino_6667543_Ekno_1_2019910152032_ekstre.pdf";
             String sOutFilePath = "/Users/esabil/Documents/files/web_dekont_summary.txt";//output file
 
             long lMrcId = Long.parseLong(psMrcId);
-            SsMrcMerchants mrcPrefs = new SsMrcMerchants();
-            mrcPrefs = DekontMisc.getMerchantPreferences(em, lMrcId);
-            
-            String baseCurrency   = mrcPrefs.currency;
+            ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
+            mrcPrefs = DekontMisc.getMerchantPreferences(em, gUserId, lMrcId);
+
+            String baseCurrency   = mrcPrefs.CurrencyCode;
             String targetCurrency = "USD";
-            
+
             //File x = new File(sInFilePath);
             PDDocument document = null;
             document = PDDocument.load(new File(sInFilePath));
@@ -785,7 +832,7 @@ public class UI
             //newReport.txnAmount = "1.10";
             DekontSummary summary = new DekontSummary();
 
-            summary = bb.app.dekonts.DekontMisc.calculateSummary(em, baseCurrency, targetCurrency, -1, -1, -1);//-1 all in
+            summary = bb.app.dekonts.DekontMisc.calculateSummary(em, lMrcId, "", baseCurrency, targetCurrency, -1, -1, -1);//-1 all in
 
             //long lUID = em.persist(newReport);
             Rsp.Content = Util.JSON.Convert2JSON(summary).toString();
