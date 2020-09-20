@@ -55,7 +55,7 @@ public final class DekontMisc
                 {
                     ssoMerchant newMrc = new ssoMerchant();
 
-                    newMrc.name  = Util.Database.getValString(RowN, "MRC_NAME");
+                    newMrc.name  = Util.Database.getValString(RowN, "PROFILENAME");//MRC_NAME
                     newMrc.id    = Util.Database.getValString(RowN, "UID");
                     newMrc.isDefault = Util.Database.getValString(RowN, "ISDEFAULT");
 
