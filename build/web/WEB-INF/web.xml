@@ -18,6 +18,7 @@
     </listener> 
     
     <listener>
+        
 	<listener-class>
              jaxesa.shutdown.ShutdownManager
         </listener-class>
@@ -90,6 +91,12 @@
             <init-param>
                 <param-name>bulbuller_dekont</param-name>
                 <param-value>webapi.UI</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_params</param-name>
+                <param-value>webapi.UI_Param</param-value>
                 <!-- <param-value>web.payeco.Methods</param-value> -->
             </init-param>
 

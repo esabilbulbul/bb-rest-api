@@ -6,6 +6,7 @@
 package misc;
 
 import bb.app.dekonts.DekontSummaryYear;
+import bb.app.pages.ssoInvBrandItemCodes;
 import bb.app.pages.ssoMerchant;
 import bb.app.pages.ssoMerchantPreferences;
 import entity.mrc.SsMrcMerchants;
@@ -31,46 +32,6 @@ public final class DekontMisc
         
     }
     */
-    public static ArrayList<ssoMerchant> getListOfMerchants4User(EntityManager pem, long pUserId) throws Exception
-    {
-        ArrayList<ssoMerchant> mrcList = new ArrayList<ssoMerchant>();
-
-        try
-        {
-
-            StoredProcedureQuery SP = pem.createStoredProcedureQuery("SP_BB_GET_USER_MRCLIST");
-
-            SP.registerStoredProcedureParameter("P_USR_ID"    , Long.class     , ParameterMode.IN);
-
-            int Colindex = 1;
-            SP.SetParameter(Colindex++, pUserId             , "P_USR_ID");
-
-            SP.execute();
-
-            List<List<RowColumn>> rs =  SP.getResultList();
-
-            if (rs.size()>0)
-            {
-                for (List<RowColumn> RowN:rs)
-                {
-                    ssoMerchant newMrc = new ssoMerchant();
-
-                    newMrc.name  = Util.Database.getValString(RowN, "MRC_NAME");
-                    newMrc.id    = Util.Database.getValString(RowN, "UID");
-                    newMrc.isDefault = Util.Database.getValString(RowN, "ISDEFAULT");
-
-                    mrcList.add(newMrc);
-                }
-
-            }
-
-            return mrcList;
-        }
-        catch(Exception e)
-        {
-            throw e;
-        }
-    }
 
     // User = User Id + Account Id
     // User might have multiple accounts 

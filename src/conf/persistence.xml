@@ -43,10 +43,23 @@
     <class>entity.prm.SsPrmCountryCodes</class>
     <class>entity.prm.SsPrmCountryStates</class>
     <class>entity.prm.SsPrmCountryPostcodes</class>
+    <class>entity.prm.SsPrmMcc</class>
     <class>entity.mrc.SsMrcDataEod</class>
     <class>entity.mrc.SsMrcStatsQuantity</class>
     <class>entity.mrc.SsMrcStatsEarnings</class>
     <class>entity.mrc.SsMrcStatsMarketRaw</class>
+    <class>entity.test.TestCache</class>
+    <class>entity.inv.SsInvTransactions</class>
+    <class>entity.inv.SsInvItemsOptions</class>
+    <class>entity.prm.SsPrmInvCategories</class>
+    <class>entity.prm.SsPrmInvItemCodes</class>
+    <class>entity.acc.SsAccInvBrands</class>
+    <class>entity.acc.SsAccInvBrandsLog</class>
+    <class>entity.acc.SsAccInvBrandItemCodes</class>
+    <class>entity.acc.SsAccInvBrandItemCodesLog</class>
+    <class>entity.acc.SsAccInvBrandItemOptions</class>
+    <class>entity.acc.SsAccInvBrandItemOptionsLog</class>
+    <class>entity.acc.SsAccInvBrandItemPrice</class>
 
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
