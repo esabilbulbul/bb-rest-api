@@ -862,7 +862,11 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.jax-persistence}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
+<<<<<<< HEAD
         <ant antfile="${project.ss-lib-common-1}/build.xml" inheritall="false" target="jar">
+=======
+        <ant antfile="${project.ss-lib-common}/build.xml" inheritall="false" target="jar">
+>>>>>>> 66df11bb52e5759e7da7625a40c58ffa9fdb5f2b
             <property name="deploy.on.save" value="false"/>
         </ant>
     </target>
@@ -891,7 +895,11 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.jax-persistence}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
+<<<<<<< HEAD
         <ant antfile="${project.ss-lib-common-1}/build.xml" inheritall="false" target="jar">
+=======
+        <ant antfile="${project.ss-lib-common}/build.xml" inheritall="false" target="jar">
+>>>>>>> 66df11bb52e5759e7da7625a40c58ffa9fdb5f2b
             <property name="deploy.on.save" value="false"/>
         </ant>
     </target>
@@ -1059,10 +1067,34 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.HttpClient-commons-codec-1.9.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.jax-interfaces-1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.jax-log-client.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+<<<<<<< HEAD
         <copyfiles files="${reference.ss-lib-common-1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.PDF-pdfbox-app-2.0.17.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.GSON-json-2.8.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.bb-lib-api.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+=======
+        <copyfiles files="${libs.MySQLDriver8.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.activemq-all-5.14.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.commons-logging-1.2.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.httpclient-4.5.2.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.httpcore-4.4.4.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.json-simple-1.1.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.jackson-all-1.9.0.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.javax.servlet-api-3.0.1.jar-1}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.jax-framework.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.java-json.jar-1}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.bb-lib-dekont-converter.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.SHIPSHUK_DB.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.pdfbox-app-2.0.17.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.commons-codec-1.9.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.jax-lib-session.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.commons-pool2-2.8.0.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.jedis-3.2.0.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.slf4j-api-2.0.0-alpha1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.jax-interfaces.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.joda-time-2.10.6.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.ss-lib-common.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+>>>>>>> 66df11bb52e5759e7da7625a40c58ffa9fdb5f2b
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
@@ -1088,10 +1120,34 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.HttpClient-commons-codec-1.9.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.jax-interfaces-1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.jax-log-client.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+<<<<<<< HEAD
         <copyfiles files="${reference.ss-lib-common-1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.PDF-pdfbox-app-2.0.17.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GSON-json-2.8.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.bb-lib-api.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+=======
+        <copyfiles files="${libs.MySQLDriver8.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.activemq-all-5.14.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.commons-logging-1.2.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.httpclient-4.5.2.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.httpcore-4.4.4.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.json-simple-1.1.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.jackson-all-1.9.0.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.javax.servlet-api-3.0.1.jar-1}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.jax-framework.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.java-json.jar-1}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.bb-lib-dekont-converter.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.SHIPSHUK_DB.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.pdfbox-app-2.0.17.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.commons-codec-1.9.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.jax-lib-session.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.commons-pool2-2.8.0.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.jedis-3.2.0.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.slf4j-api-2.0.0-alpha1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.jax-interfaces.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${file.reference.joda-time-2.10.6.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.ss-lib-common.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+>>>>>>> 66df11bb52e5759e7da7625a40c58ffa9fdb5f2b
     </target>
     <target depends="init" if="dist.ear.dir" name="-clean-webinf-lib">
         <delete dir="${build.web.dir}/WEB-INF/lib"/>
@@ -1513,7 +1569,11 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.jax-lib-util}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.jax-log-client}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.jax-persistence}/build.xml" inheritall="false" target="clean"/>
+<<<<<<< HEAD
         <ant antfile="${project.ss-lib-common-1}/build.xml" inheritall="false" target="clean"/>
+=======
+        <ant antfile="${project.ss-lib-common}/build.xml" inheritall="false" target="clean"/>
+>>>>>>> 66df11bb52e5759e7da7625a40c58ffa9fdb5f2b
     </target>
     <target depends="init" name="do-clean">
         <condition property="build.dir.to.clean" value="${build.web.dir}">

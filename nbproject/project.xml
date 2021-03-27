@@ -112,6 +112,14 @@
                     <file>${reference.bb-lib-api.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
+                <library dirs="200">
+                    <file>${file.reference.joda-time-2.10.6.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${reference.ss-lib-common.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
             </web-module-libraries>
             <web-module-additional-libraries/>
             <source-roots>
@@ -188,7 +196,11 @@
                 <id>jar</id>
             </reference>
             <reference>
+<<<<<<< HEAD
                 <foreign-project>ss-lib-common-1</foreign-project>
+=======
+                <foreign-project>ss-lib-common</foreign-project>
+>>>>>>> 66df11bb52e5759e7da7625a40c58ffa9fdb5f2b
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>
