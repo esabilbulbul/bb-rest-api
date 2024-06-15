@@ -89,14 +89,86 @@
         <!--    Project Entrypoin Params  -->
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
             <init-param>
-                <param-name>bulbuller_dekont</param-name>
+                <param-name>bulbuller_params</param-name>
+                <param-value>webapi.UI_Param</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_UI</param-name>
                 <param-value>webapi.UI</param-value>
                 <!-- <param-value>web.payeco.Methods</param-value> -->
             </init-param>
 
             <init-param>
-                <param-name>bulbuller_params</param-name>
-                <param-value>webapi.UI_Param</param-value>
+                <param-name>bulbuller_home</param-name>
+                <param-value>webapi.UIHome</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_ftp</param-name>
+                <param-value>webapi.UIFTP</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_User</param-name>
+                <param-value>webapi.UIUser</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_stats</param-name>
+                <param-value>webapi.UIStats</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_eod</param-name>
+                <param-value>webapi.UIEOD</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_inventory</param-name>
+                <param-value>webapi.UIInventoryEntry</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>vendor_balance</param-name>
+                <param-value>webapi.UIBalances</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>vendor_payments</param-name>
+                <param-value>webapi.UIPayments</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>vendor_inv_search</param-name>
+                <param-value>webapi.UIInventorySearch</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+            
+            <init-param>
+                <param-name>vendor_inv_update</param-name>
+                <param-value>webapi.UIInventoryUpdate</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>cashier_pos</param-name>
+                <param-value>webapi.UICashier</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>supplier</param-name>
+                <param-value>webapi.UISupplier</param-value>
                 <!-- <param-value>web.payeco.Methods</param-value> -->
             </init-param>
 
