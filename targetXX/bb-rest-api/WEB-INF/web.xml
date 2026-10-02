@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+   version="6.0">
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+
+    <session-config>
+        <session-timeout>
+            1
+        </session-timeout>
+    </session-config>
+    
+    
+    <!-- JAXESA LISTENERS -->
+    <listener> 
+        <listener-class>jaxesa.session.SessionManager</listener-class>        
+    </listener> 
+    
+    <listener>
+        
+	<listener-class>
+             jaxesa.shutdown.ShutdownManager
+        </listener-class>
+    </listener>
+
+    <listener>
+	<listener-class>
+             jaxesa.log.LogManager
+        </listener-class>
+   </listener>
+
+    <context-param>
+        <param-name>servlet_redis_config</param-name>
+        <param-value>
+            {
+                "host":"redis://localhost",
+                "port":6379
+            }
+        </param-value>
+    </context-param>
+
+    <servlet>
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+        <!-- JAXESA FRAMEWORK Entry       -->
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+            <servlet-name>jaxesa</servlet-name>
+            <servlet-class>jaxesa.servlet.framework.framework</servlet-class>
+            <!-- <servlet-class>MyAnnos.NewServlet</servlet-class> -->
+            <load-on-startup>1</load-on-startup><!-- THIS IS IMPORTANT PARAMETER MUST BE INCLUDED -->
+
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+        <!--        Jaxesa Params         -->
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+            <init-param>
+                <param-name>servercode</param-name>
+                <param-value>EB_PC</param-value>
+            </init-param>
+            <init-param>
+                <param-name>servletname</param-name>
+                <param-value>bb-rest-api</param-value>
+            </init-param>
+            <init-param>
+                <param-name>logserverurl</param-name>
+                <param-value>tcp://localhost:61616</param-value>
+            </init-param>
+            <init-param>
+                <param-name>logqueuename</param-name>
+                <param-value>jaxesa.foo</param-value>
+            </init-param>
+            <init-param>
+                <param-name>logfolder</param-name>
+                <param-value>serverlog</param-value>            
+            </init-param>
+            <init-param>
+                <param-name>filename</param-name>
+                <param-value>bb-rest-api</param-value><!-- LOG ICIN KULLANILIYOR -->
+            </init-param>
+            <init-param>
+                <param-name>dbconnectionnumber</param-name>
+                <param-value>5</param-value>
+            </init-param>
+            <init-param>
+                <param-name>dbassigntimeout</param-name>
+                <param-value>30</param-value>
+            </init-param>
+            <init-param>
+                <param-name>gmt</param-name>
+                <param-value>+8</param-value>            
+            </init-param>
+            <init-param>
+                <param-name>sqldb_mem_table_installs</param-name>
+                <param-value>SP_MEM_MOVE_FX_2_MEMORY, SP_FX_MOVE_AVG_RATES_2_MEMORY, SP_MEM_MOVE_VENDORS_2_MEMORY</param-value>
+            </init-param>
+            <!--
+            <init-param>
+                <param-name>memdb_host</param-name>
+                <param-value>localhost</param-value>            
+            </init-param>
+            <init-param>
+                <param-name>memdb_port</param-name>
+                <param-value>6379</param-value>            
+            </init-param>
+            -->
+            <!--
+            <init-param>
+                <param-name>servlet_redis_config</param-name>
+                <param-value>
+                    {
+                        "host":"localhost",
+                        "port":6379
+                    }
+                </param-value>
+            </init-param>
+            -->
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+        <!--    Project Entrypoin Params  -->
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+            <init-param>
+                <param-name>bulbuller_params</param-name>
+                <param-value>webapi.UIParam</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_UI</param-name>
+                <param-value>webapi.UI</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_home</param-name>
+                <param-value>webapi.UIHome</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_ftp</param-name>
+                <param-value>webapi.UIFTP</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_User</param-name>
+                <param-value>webapi.UIUser</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_stats</param-name>
+                <param-value>webapi.UIStats</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_eod</param-name>
+                <param-value>webapi.UIEOD</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>statement_bill</param-name>
+                <param-value>webapi.UIBill</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>bulbuller_inventory</param-name>
+                <param-value>webapi.UIInventoryEntry</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>vendor_balance</param-name>
+                <param-value>webapi.UIBalances</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>vendor_payments</param-name>
+                <param-value>webapi.UIPayments</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>vendor_inv_search</param-name>
+                <param-value>webapi.UIInventorySearch</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+            
+            <init-param>
+                <param-name>vendor_inv_update</param-name>
+                <param-value>webapi.UIInventoryUpdate</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>cashier_pos</param-name>
+                <param-value>webapi.UICashier</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>supplier</param-name>
+                <param-value>webapi.UISupplier</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>backup</param-name>
+                <param-value>webapi.UIBackup</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>3rdParty</param-name>
+                <param-value>webapi.UIAPI</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+    </servlet>
+
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!--          Start Path          -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+        <servlet-mapping>
+            <servlet-name>jaxesa</servlet-name><!-- make sure same name with the one defined in SERVLET section here -->
+            <url-pattern>/rest/bb/*</url-pattern>
+        </servlet-mapping>
+
+</web-app>

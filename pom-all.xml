@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.shipshuk</groupId>
+    <artifactId>shipshuk-parent</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>../../../../framework/servlet/jax-core-log/v2_maven/jax-log-client</module>
+        <module>../../../../framework/servlet/jax-lib-params/v2_maven/jax-lib-params</module>
+        <module>../../../../framework/servlet/jax-lib-session/v2_maven/jax-lib-session</module>
+        <module>../../../../FTP/lib/jax-lib-ftp-misc/v2_maven/jax-lib-ftp-misc</module>
+        <module>../../../../framework/servlet/jax-lib-antivirus/v2_maven/jax-lib-antivirus</module>
+        <module>../../../../framework/servlet/jax-lib-util/v2_maven/jax-lib-util</module>
+        <module>../../../../framework/servlet/jax-persistence/v2_maven/jax-persistence</module>
+        <module>../../../../framework/servlet/jax-interface-worker/v2_maven/jax-interfaces-worker</module>
+        <module>../../../../framework/servlet/jax-framework/v5_maven/jax-framework</module>
+        <module>../../../../BACKEND/entity/v2_maven/SHIPSHUK_DB</module>
+        <module>../../../../BACKEND/lib/ss-wapi-geo/v2_maven/ss-wapi-geo</module>
+        <module>../../../../BACKEND/lib/ss-wapi-security/v2_maven/ss-wapi-security</module>
+        <module>../../../../BACKEND/lib/ss-wapi-catalog/v2_maven/ss-wapi-catalog</module>
+        <module>../../../../BACKEND/lib/ss-wapi-signup/v2_maven/ss-wapi-signup</module>
+        <module>../../../../BACKEND/lib/ss-wapi-ui/v2_maven/ss-wapi-ui</module>
+        <module>../../../../BACKEND/lib/ss-lib-common/v2_maven/ss-lib-common</module>
+		
+		<module>../../../../BULBULLER/bb-lib-api/v2_maven/bb-lib-api</module>
+	
+        <module>.</module>
+    </modules>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
