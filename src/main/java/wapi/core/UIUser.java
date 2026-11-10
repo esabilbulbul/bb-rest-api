@@ -82,24 +82,31 @@ public class UIUser  implements jeiRestInterface
                     + "{lng},"
                     + "{cnt},"//browser
                     + "{sid},"
-                    + "{pgid}"
+                    + "{pgid},"
+                    + "{rst}"
          )
     @Consumes()
     @Produces(MediaType.JSON_PLUS)
     @Token(VerificationType.MUST)
     @UserGrants({UserRole.ADMIN, UserRole.MANAGER})
-    public ssoAPIResponse getAccountN_Settings( @PathParam("aid")                      String pAccId,
+    public ssoAPIResponse getAccountNSettings( @PathParam("aid")                      String pAccId,
                                                 @PathParam("lng")                      String psLang,
                                                 @PathParam("cnt")                      String psCountry,
                                                 @PathParam("sid")                      String psSessionId,
-                                                @PathParam("pgid")                     String psPageId
+                                                @PathParam("pgid")                     String psPageId,
+                                                @PathParam("rst")                      String psReset
                                                  //@PathParam("mid")                          String psMerchantId
                                                ) throws Exception
     {
         int iRec = 0;
         try
         {
+            boolean bReset = false;
+            
             ssoAPIResponse Rsp = new ssoAPIResponse();
+            
+            if(psReset.toLowerCase().equals("y")==true)
+                bReset = true;
 
             //EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
             ssoUserAccounts accConnected = new ssoUserAccounts();
@@ -121,7 +128,7 @@ public class UIUser  implements jeiRestInterface
             //long lMrcId = Long.parseLong(pAccId);
             ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
             
-            mrcPrefs = DekontMisc.getShortMerchantPreferences(gem, accConnected.userId, accConnected.uid);
+            mrcPrefs = DekontMisc.getShortMerchantPreferences(gem, accConnected.userId, accConnected.uid, bReset);
             
             Rsp.Content  = Util.JSON.Convert2JSON(mrcPrefs).toString();
             Rsp.Response = "ok";
@@ -304,6 +311,7 @@ public class UIUser  implements jeiRestInterface
                             + "{sc},"
                             + "{coc},"
                             + "{tx},"
+                            + "{pmr},"
                             + "{txr},"
                             + "{inr},"
                             + "{eml},"
@@ -333,6 +341,7 @@ public class UIUser  implements jeiRestInterface
                                                 @PathParam("coc")                          String psPlaceNameUId,
                                                 @PathParam("tx")                           String psTaxInPrice,
                                                 @PathParam("txr")                          String psTaxRate,
+                                                @PathParam("pmr")                          String psProfitRate,
                                                 @PathParam("inr")                          String psInsDiffRate,
                                                 @PathParam("eml")                          String psEmail,
                                                 @PathParam("nm")                           String psProfileName,
@@ -341,7 +350,7 @@ public class UIUser  implements jeiRestInterface
 
                                                 @PathParam("ses")                          String psSeperateEStore,
                                                 @PathParam("sbn")                          String psShowBrandName
-                                                
+            
                                               ) throws Exception
     {
         int iRec = 0;
@@ -384,7 +393,7 @@ public class UIUser  implements jeiRestInterface
                 
                 Util.Tomcat.print2TomcatLog(logger, "api/usr/svac > getAccountSettings", pAccId);
                 
-                mrcPrefs = AccountMisc.getAccountSettings(gem, accConnected.userId, accConnected.uid);
+                mrcPrefs = AccountMisc.getAccountSettings(gem, accConnected.userId, accConnected.uid, true);
 
                 if (mrcPrefs!=null)
                 {
@@ -460,10 +469,11 @@ public class UIUser  implements jeiRestInterface
                         SP.registerStoredProcedureParameter("P_NACE_CODE"        , String.class       , ParameterMode.IN);
                         SP.registerStoredProcedureParameter("P_STATE_CODE"       , String.class       , ParameterMode.IN);
                         SP.registerStoredProcedureParameter("P_PLACE_NAME_ID"    , String.class       , ParameterMode.IN);
-                        SP.registerStoredProcedureParameter("P_COUNTRY_CODE"     , Integer.class      , ParameterMode.IN);
+                        SP.registerStoredProcedureParameter("P_COUNTRY_CODE"     , String.class      , ParameterMode.IN);
 
                         SP.registerStoredProcedureParameter("P_B_IS_TAX_INC_PRICE"          , String.class     , ParameterMode.IN);
                         SP.registerStoredProcedureParameter("P_TAX_RATE"                    , BigDecimal.class , ParameterMode.IN);
+                        SP.registerStoredProcedureParameter("P_PROFIT_RATE"                 , BigDecimal.class , ParameterMode.IN);
                         SP.registerStoredProcedureParameter("P_INSTALLMENT_DIFFERENCE_RATE" , BigDecimal.class , ParameterMode.IN);
                         SP.registerStoredProcedureParameter("P_B_SEPERATE_ESTORE"           , String.class     , ParameterMode.IN);
                         SP.registerStoredProcedureParameter("P_B_SHOW_BRAND_NAMES_ON_ESTORE", String.class     , ParameterMode.IN);
@@ -486,6 +496,7 @@ public class UIUser  implements jeiRestInterface
                         SP.SetParameter(index++, psCountryCode  , "COUNTRY_CODE");
                         SP.SetParameter(index++, psTaxInPrice   , "IS_TAX_INC_PRICE");
                         SP.SetParameter(index++, psTaxRate      , "TAX_RATE");
+                        SP.SetParameter(index++, psProfitRate   , "P_PROFIT_RATE");
                         SP.SetParameter(index++, psInsDiffRate  , "INS_DIFF_RATE");
 
                         SP.SetParameter(index++, psSeperateEStore  , "SEPERATE_ESTORE");

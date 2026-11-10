@@ -111,7 +111,7 @@ public class UIFTP implements jeiRestInterface
 
             BigInteger lMrcId = new BigInteger(psMrcId);
             ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
-            mrcPrefs = AccountMisc.getAccountSettings(em, gUserId, lMrcId);
+            mrcPrefs = AccountMisc.getAccountSettings(em, gUserId, lMrcId, false);
 
             String baseCurrency   = mrcPrefs.CurrencyCode;
             String targetCurrency = "USD";

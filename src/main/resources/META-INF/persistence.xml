@@ -106,7 +106,7 @@
       <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
       <!-- jaxesa specific NOT JPA -->
       <property name="db.query.connection.number" value="10"/>
-      <property name="db.query.timeout.seconds" value="5"/> 
+      <property name="db.query.timeout.seconds" value="5000"/> 
     </properties>
   </persistence-unit>
 </persistence>
