@@ -109,9 +109,12 @@ public final class DekontMisc
     // This only returns the codes of Merchant Preferences
     //
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    public static ssoMerchantPreferences getShortMerchantPreferences(EntityManager pem, BigInteger pUserId, BigInteger pAccountId) throws Exception
+    public static ssoMerchantPreferences getShortMerchantPreferences(EntityManager pem, 
+                                                                     BigInteger    pUserId, 
+                                                                     BigInteger    pAccountId,
+                                                                     boolean       pbReset) throws Exception
     {
-        return AccountMisc.getAccountSettings(pem, pUserId, pAccountId);
+        return AccountMisc.getAccountSettings(pem, pUserId, pAccountId, pbReset);
     }
 
     public static String generateReportId()

@@ -73,10 +73,13 @@
                 <param-name>filename</param-name>
                 <param-value>bb-rest-api</param-value><!-- LOG ICIN KULLANILIYOR -->
             </init-param>
+            <!--
+            GO TO PERSISTENCE.XML for this setting
             <init-param>
                 <param-name>dbconnectionnumber</param-name>
-                <param-value>5</param-value>
+                <param-value>5000</param-value>
             </init-param>
+            -->
             <init-param>
                 <param-name>dbassigntimeout</param-name>
                 <param-value>30</param-value>
@@ -223,6 +226,12 @@
             <init-param>
                 <param-name>3rdParty</param-name>
                 <param-value>wapi.dev.UIDevAPI</param-value>
+                <!-- <param-value>web.payeco.Methods</param-value> -->
+            </init-param>
+
+            <init-param>
+                <param-name>sms</param-name>
+                <param-value>wapi.text.UISMS</param-value>
                 <!-- <param-value>web.payeco.Methods</param-value> -->
             </init-param>
 

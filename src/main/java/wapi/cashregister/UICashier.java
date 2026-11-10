@@ -98,44 +98,44 @@ public class UICashier implements jeiRestInterface
     {
         try
         {
-            ArrayList<ssoInvBrandItemCodes> aItemsFound = new ArrayList<ssoInvBrandItemCodes>();
+                    ArrayList<ssoInvBrandItemCodes> aItemsFound = new ArrayList<ssoInvBrandItemCodes>();
 
-            ssoAPIResponse rsp = new ssoAPIResponse();
-            ssoUserAccounts accConnected = new ssoUserAccounts();
+                    ssoAPIResponse rsp = new ssoAPIResponse();
+                    ssoUserAccounts accConnected = new ssoUserAccounts();
 
-            BigInteger lSessionUserId = gUserId;//for now
-            BigInteger lTargetAccId = new BigInteger(pAccId);
+                    BigInteger lSessionUserId = gUserId;//for now
+                    BigInteger lTargetAccId = new BigInteger(pAccId);
 
-            accConnected = Users.connectAccount(gem, gUserId, lTargetAccId, gServiceGrants);
-            if(accConnected.bAccessGranted==false)
-            {
-                if(accConnected.bForce2Login==true)
-                    rsp.AuthenticationFailed = true;
+                    accConnected = Users.connectAccount(gem, gUserId, lTargetAccId, gServiceGrants);
+                    if(accConnected.bAccessGranted==false)
+                    {
+                        if(accConnected.bForce2Login==true)
+                            rsp.AuthenticationFailed = true;
 
-                rsp.Response = "err";
-                rsp.ResponseMsg = "Account invalid";
-                return rsp;
-            }
+                        rsp.Response = "err";
+                        rsp.ResponseMsg = "Account invalid";
+                        return rsp;
+                    }
 
-            boolean bReset = false;
-            if (psReset.trim().equals("Y")==true)
-                bReset = true;
+                    boolean bReset = false;
+                    if (psReset.trim().equals("Y")==true)
+                        bReset = true;
 
-            ssoCashRegisterParams CRParams = new ssoCashRegisterParams();
-            CRParams = CashRegister.getParams(  gem, 
-                                                accConnected.userId, 
-                                                accConnected.uid,
-                                                bReset);
+                    ssoCashRegisterParams CRParams = new ssoCashRegisterParams();
+                    CRParams = CashRegister.getParams(  gem, 
+                                                        accConnected.userId, 
+                                                        accConnected.uid,
+                                                        bReset);
 
-            if (psReset.trim().equals("Y")==true)
-                gem.flush();
+                    if (psReset.trim().equals("Y")==true)
+                        gem.flush();
 
-            CRParams.accSet = DekontMisc.getShortMerchantPreferences(gem, accConnected.userId, accConnected.uid);
+                    CRParams.accSet = DekontMisc.getShortMerchantPreferences(gem, accConnected.userId, accConnected.uid, false);
 
-            rsp.Content = Util.JSON.Convert2JSON(CRParams).toString();
-            rsp.Response = "ok";
+                    rsp.Content = Util.JSON.Convert2JSON(CRParams).toString();
+                    rsp.Response = "ok";
 
-            return rsp;
+                    return rsp;
         }
         catch(Exception e)
         {

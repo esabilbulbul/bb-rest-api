@@ -79,7 +79,7 @@ public class UIHome implements jeiRestInterface
             
         }
     }
-    
+
 
     @GET
     //@Path("/gmis/{aid},"
@@ -108,7 +108,7 @@ public class UIHome implements jeiRestInterface
         try
         {
             Util.Tomcat.print2TomcatLog(logger, "api/home/gap starting", pAccountId);
-            
+
             ssoAPIResponse Rsp = new ssoAPIResponse();
 
             //EntityManager em = DBPool.getSessionConnection(psUser_SessionInfo, Util.Methods.hash());
@@ -141,7 +141,7 @@ public class UIHome implements jeiRestInterface
                 Util.Tomcat.print2TomcatLog(logger, "TOU control passed for " + pAccountId, pAccountId);
 
                 //mrcPrefs = AccountMisc.getAccountSettings(gem, accConnected.userId, accConnected.uid);
-                mrcPrefs = DekontMisc.getShortMerchantPreferences(gem, accConnected.userId, accConnected.uid);
+                mrcPrefs = DekontMisc.getShortMerchantPreferences(gem, accConnected.userId, accConnected.uid, false);
 
                 Util.Tomcat.print2TomcatLog(logger, "Account preferences retrieved for " + pAccountId, pAccountId);
 
@@ -270,7 +270,7 @@ public class UIHome implements jeiRestInterface
 
             // MrcId = acc.uid
             ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
-            mrcPrefs = AccountMisc.getAccountSettings(gem, gUserId, lAccId);
+            mrcPrefs = AccountMisc.getAccountSettings(gem, gUserId, lAccId, false);
 
             String baseCurrency   = mrcPrefs.CurrencyCode;
             String targetCurrency = psCurrency;
@@ -485,7 +485,7 @@ public class UIHome implements jeiRestInterface
             }
             
             ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
-            mrcPrefs = AccountMisc.getAccountSettings(gem, accConnected.userId, accConnected.uid);
+            mrcPrefs = AccountMisc.getAccountSettings(gem, accConnected.userId, accConnected.uid, false);
             
             String baseCurrency   = mrcPrefs.CurrencyCode;
             String targetCurrency = psCurrency;

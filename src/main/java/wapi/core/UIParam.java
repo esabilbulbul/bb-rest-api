@@ -159,7 +159,7 @@ public class UIParam implements jeiRestInterface
             // mrcList = DekontMisc.getListOfMerchants4User(gem, gUserId);
             ssoMerchantPreferences mrcPrefs = new ssoMerchantPreferences();
 
-            mrcPrefs = DekontMisc.getShortMerchantPreferences(gem, accConnected.userId, accConnected.uid);
+            mrcPrefs = DekontMisc.getShortMerchantPreferences(gem, accConnected.userId, accConnected.uid, false);
 
             mrcList = DictionaryOps.User.getListOfAccounts4User(gem, lSessionUserId, false);//This must be sessionUserId
 
